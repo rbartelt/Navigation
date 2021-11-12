@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         navController = navHostFragment.getNavController();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        NavigationUI.setupWithNavController(toolbar, navController);
+        NavigationUI.setupActionBarWithNavController(this, navController);
+        //NavigationUI.setupWithNavController(toolbar, navController);
     }
 
     @Override
