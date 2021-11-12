@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -38,7 +39,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.termsAndConditions) {
+            NavDirections action = NavGraphDirections.actionGlobalTermsFragment();
+            navController.navigate(action);
+            return true;
+        } else {
+            return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
