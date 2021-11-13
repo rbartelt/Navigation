@@ -3,6 +3,7 @@ package de.xxlstrandkorbverleih.navigation;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,22 +32,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //get NavHostFragment
-        final NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();                         //get NavController
 
-        //set TopLevelDestinations
-        Set<Integer> topLevel = new HashSet<>();
-        topLevel.add(R.id.homeFragment);
-        topLevel.add(R.id.searchFragment);
-        //and set it to the AppBarConfiguration to avoid the Back Button shown in the actionBar
-        appBarConfiguration = new AppBarConfiguration.Builder(topLevel).build();
+        //set TopLevelDestinations (wich dont show the Backbutton in Actionbar)
+        Set<Integer> topLevelDestinations = new HashSet<>();
+        topLevelDestinations.add(R.id.homeFragment);
+        topLevelDestinations.add(R.id.searchFragment);
+        //find DrawerLayout
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        //setup AppBarConfiguration
+        appBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).setOpenableLayout(drawerLayout).build();
 
         Toolbar toolbar = findViewById(R.id.toolbar);                               //find Toolbar
         setSupportActionBar(toolbar);                                               //set Toolbar as Actionbar in Mainactivity
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);   //connects the Toolbar with Navgraph
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);  //find BottomNavigationView
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);   //connects BottomNavigationView with NavGraph
+        //connects BottomNavigationView with NavGraph
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        //Connect Drawer with Navgraph
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
     }
 
     @Override
@@ -68,6 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        return navController.navigateUp() || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 }
